@@ -1,7 +1,7 @@
-import { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import { AppContext } from '../../store/context';
-import { InputTask } from './styles';
+import { InputTask, RowTask } from './styles';
 
 const TasksListComponent = () => {
   const [taskWrited, setTaskWrited] = useState('');
@@ -12,12 +12,34 @@ const TasksListComponent = () => {
     setTaskWrited(event.target.value);
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter') {
-      setListTasks((prevstate: string[]) => [...prevstate, taskWrited]);
+  const verifyIfHaveTaskWrited = () => {
+    if (taskWrited) {
+      setListTasks((prevstate: string[]) => [
+        ...prevstate,
+        { taskDescription: taskWrited },
+      ]);
       setTaskWrited('');
       setButtonInstruction('stop');
+    } else window.alert('Não é possível inserir tarefa sem descrição');
+  };
+
+  const updateListTask = () => {
+    if (listTasks.find((item) => item.taskDescription === taskWrited)) {
+      window.alert('Não é possível inserir tarefa com a mesma desrição');
+    } else {
+      verifyIfHaveTaskWrited();
     }
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      updateListTask();
+    }
+  };
+
+  const handleRemoveTask = (event: any) => {
+    const id = event.target.id;
+    setListTasks(listTasks.filter((item) => item.taskDescription !== id));
   };
 
   return (
@@ -30,7 +52,12 @@ const TasksListComponent = () => {
         value={taskWrited}
       />
       {listTasks.map((taskItem, index) => (
-        <p key={index}>{taskItem}</p>
+        <RowTask key={index}>
+          <span id={String(taskItem.taskDescription)} onClick={handleRemoveTask}>
+            x
+          </span>
+          <p>{taskItem.taskDescription}</p>
+        </RowTask>
       ))}
     </>
   );

@@ -20,8 +20,6 @@ export const ContextProvider = ({ children }: any) => {
 
   const [timeCountDown, setTimeCountDown] = useState(5);
 
-  console.log(timeCountDown);
-
   const [buttonInstruction, setButtonInstruction] = useState('stop');
   return (
     <AppContext.Provider
