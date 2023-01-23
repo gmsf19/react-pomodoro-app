@@ -41,6 +41,7 @@ module.exports = {
     'simple-import-sort/imports': 'error',
     'simple-import-sort/exports': 'error',
     '@typescript-eslint/no-explicit-any': 'off',
+    'quote-props': 'always',
     'jsx-a11y/anchor-is-valid': [
       'error',
       {

@@ -6,7 +6,7 @@ import { InputTask } from './styles';
 const TasksListComponent = () => {
   const [taskWrited, setTaskWrited] = useState('');
 
-  const { listTasks, setListTasks } = useContext(AppContext);
+  const { listTasks, setListTasks, setButtonInstruction } = useContext(AppContext);
 
   const handleChangeTaskList = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTaskWrited(event.target.value);
@@ -16,6 +16,7 @@ const TasksListComponent = () => {
     if (event.key === 'Enter') {
       setListTasks((prevstate: string[]) => [...prevstate, taskWrited]);
       setTaskWrited('');
+      setButtonInstruction('stop');
     }
   };
 
