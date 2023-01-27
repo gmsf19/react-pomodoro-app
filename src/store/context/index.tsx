@@ -10,12 +10,14 @@ interface StatesContextType {
   setTimeCountDown: Dispatch<SetStateAction<number>>;
   buttonInstruction: string;
   setButtonInstruction: Dispatch<SetStateAction<any>>;
-  selectedTask: any[];
-  setSelectedTask: Dispatch<SetStateAction<TaskType[]>>;
   intervalTimeCountdown: number;
   setIntervalTimeCountdown: Dispatch<SetStateAction<number>>;
   timeCountdownMode: string;
   setTimeCountdownMode: Dispatch<SetStateAction<string>>;
+  completedTasks: any[];
+  setCompletedTasks: Dispatch<SetStateAction<never[]>>;
+  completedCicle: boolean;
+  setCompletedCicle: Dispatch<SetStateAction<boolean>>;
 }
 
 export const AppContext = createContext({} as StatesContextType);
@@ -31,9 +33,11 @@ export const ContextProvider = ({ children }: any) => {
 
   const [buttonInstruction, setButtonInstruction] = useState('stop');
 
-  const [selectedTask, setSelectedTask] = useState<TaskType[]>([]);
-
   const [timeCountdownMode, setTimeCountdownMode] = useState('work');
+
+  const [completedTasks, setCompletedTasks] = useState([]);
+
+  const [completedCicle, setCompletedCicle] = useState(false);
 
   return (
     <AppContext.Provider
@@ -46,12 +50,14 @@ export const ContextProvider = ({ children }: any) => {
         setTimeCountDown,
         buttonInstruction,
         setButtonInstruction,
-        selectedTask,
-        setSelectedTask,
         intervalTimeCountdown,
         setIntervalTimeCountdown,
         timeCountdownMode,
         setTimeCountdownMode,
+        completedTasks,
+        setCompletedTasks,
+        completedCicle,
+        setCompletedCicle,
       }}
     >
       {children}

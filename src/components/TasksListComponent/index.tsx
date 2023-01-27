@@ -7,8 +7,9 @@ import { TaskType } from './types';
 const TasksListComponent = () => {
   const [taskWrited, setTaskWrited] = useState('');
 
-  const { listTasks, setListTasks, setButtonInstruction, selectedTask, setSelectedTask } =
-    useContext(AppContext);
+  const { listTasks, setListTasks, setButtonInstruction } = useContext(AppContext);
+
+  console.log(listTasks);
 
   const handleChangeTaskList = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTaskWrited(event.target.value);
@@ -16,16 +17,16 @@ const TasksListComponent = () => {
 
   const verifyIfHaveTaskWithSameDescription = () => {
     if (taskWrited) {
-      setListTasks((prevstate: string[]) => [
+      setListTasks((prevstate: any) => [
         ...prevstate,
-        { taskDescription: taskWrited },
+        { taskDescription: taskWrited, taskSelected: false, taskCompleted: false },
       ]);
       setTaskWrited('');
       setButtonInstruction('stop');
     } else window.alert('Insira uma descrição na tarefa');
   };
 
-  const updateListTask = () => {
+  const incrementListTask = () => {
     if (listTasks.find((item) => item.taskDescription === taskWrited)) {
       window.alert('Não é possível inserir tarefa com a mesma desrição');
     } else {
@@ -35,7 +36,7 @@ const TasksListComponent = () => {
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === 'Enter') {
-      updateListTask();
+      incrementListTask();
     }
   };
 
@@ -44,24 +45,26 @@ const TasksListComponent = () => {
     setListTasks(listTasks.filter((item) => item.taskDescription !== id));
   };
 
-  const conditionsToSetSelectedTasks = (
-    checked: boolean,
-    containSameTaskInState: TaskType,
-    id: string,
-  ) => {
-    if (checked === true && !containSameTaskInState) {
-      setSelectedTask((prevstate) => [...prevstate, { checked, id }]);
-    } else if (checked === false && containSameTaskInState) {
-      setSelectedTask((prevstate) => [...prevstate.filter((task) => task.id !== id)]);
-    }
+  const updateListTask = (index: number, checked: boolean, obj: any) => {
+    const updatedListTask = [...listTasks];
+    updatedListTask[index] = {
+      taskDescription: obj.taskDescription,
+      taskSelected: checked,
+      taskCompleted: obj.taskCompleted,
+    };
+    setListTasks(updatedListTask);
   };
 
   const handleChangeCheckbox = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { checked, id } = event.target;
-    const containSameTaskInState = selectedTask.find((task) => task.id === id);
-    conditionsToSetSelectedTasks(checked, containSameTaskInState, id);
+
+    const sameobj = listTasks.find((item) => item.taskDescription === id);
+    const index = listTasks.indexOf(sameobj, 0);
+
+    updateListTask(index, checked, sameobj);
     setButtonInstruction('stop');
   };
+
   return (
     <>
       <InputTask
@@ -81,6 +84,7 @@ const TasksListComponent = () => {
             onChange={handleChangeCheckbox}
             type="checkbox"
             key={taskItem}
+            checked={taskItem.taskSelected}
           />
           <p>{taskItem.taskDescription}</p>
         </RowTask>
